@@ -74,7 +74,7 @@ def cipher():
         return text_box, new_text
 
     ################################################################################################################################
-    def caesar_cipher():  # 1st cipher
+    def RSA_cipher():  # 1st cipher
 
         remove()
 
@@ -88,7 +88,7 @@ def cipher():
         text_box, new_text = lab()
         sample = ""
         new_text.insert(1.0, sample)
-        label = Label(main, text="caesar_cipher" , font=('Times New Roman', 16, "bold"),bg="#FDA73F")
+        label = Label(main, text="RSA Encryption" , font=('Times New Roman', 16, "bold"),bg="#FDA73F")
         label.grid(row=0, column=1)
 
         def encrypt():
@@ -152,7 +152,7 @@ def cipher():
 
     ################################################################################################################################
 
-    def railfence_cipher():
+    def DES3_cipher():
         remove()
 
         list_key = ttk.Combobox(main)
@@ -163,7 +163,7 @@ def cipher():
         text_box, new_text = lab()
         sample = " "
         new_text.insert(1.0, sample)
-        label = Label(main, text="railfence_cipher")
+        label = Label(main, text="Triple DES")
         label.grid(row=0, column=1)
 
         def encrypt():
@@ -191,7 +191,7 @@ def cipher():
 
 
     ############################################################################################################################
-    def columnar_trans_cipher():
+    def AES_cipher():
         remove()
 
         key_text = Entry(main, width=40)
@@ -200,7 +200,7 @@ def cipher():
         text_box, new_text = lab()
         sample = " "
         new_text.insert(1.0, sample)
-        label = Label(main, text="columnar_trans_cipher")
+        label = Label(main, text="AES cipher")
         label.grid(row=0, column=1)
 
         def encrypt():
@@ -231,10 +231,10 @@ def cipher():
                          activeforeground='#3FBE4F')
     home_button.grid(row=0, column=0)
 
-    caesar = Button(left_frame, padx=20, bd=10, text='Caesar Cipher', width=20, height=3, command=caesar_cipher,
+    RSA = Button(left_frame, padx=20, bd=10, text='RSA Cipher', width=20, height=3, command=RSA_cipher,
                     bg='white', fg='red', activebackground='black', font=('arial', 16, 'bold'),
                     activeforeground='#3FBE4F')
-    caesar.grid(row=1, column=0)
+    RSA.grid(row=1, column=0)
 
 
     vignere = Button(left_frame, padx=20, bd=10, text='Vignere Cipher', width=20, height=3, command=vignere_cipher,
@@ -244,19 +244,19 @@ def cipher():
 
 
 
-    railfence = Button(left_frame, padx=20, bd=10, text='Railfence Cipher', width=20, height=3,
-                       command=railfence_cipher, bg='white', fg='red', activebackground='black',
+    DES3 = Button(left_frame, padx=20, bd=10, text='Triple DES Cipher', width=20, height=3,
+                       command=DES3_cipher, bg='white', fg='red', activebackground='black',
                        font=('arial', 16, 'bold'), activeforeground='#3FBE4F')
-    railfence.grid(row=3, column=0)
+    DES3.grid(row=3, column=0)
 
 
 
 
 
-    columnar = Button(left_frame, padx=20, bd=10, text='Columnar Transposition Cipher', width=26, height=3,
-                      command=columnar_trans_cipher, bg='white', fg='red', font=('arial', 12, 'bold'),
+    AES = Button(left_frame, padx=20, bd=10, text='AES Cipher', width=26, height=3,
+                      command=AES_cipher, bg='white', fg='red', font=('arial', 12, 'bold'),
                       activebackground='black', activeforeground='SeaGreen1')
-    columnar.grid(row=4, column=0)
+    AES.grid(row=4, column=0)
 
 
     Exit = Button(left_frame, text="Exit", padx=20, bd=10, width=23,height=3, command=window.destroy, activebackground="red",
