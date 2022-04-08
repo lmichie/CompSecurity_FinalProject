@@ -12,16 +12,16 @@ d = pow(e, -1, int(phi_n))
 def coprime(a, b):
 	return gcd(a,b) == 1
 
-def encrypt(m):
-	m = m.strip()
-	b = bytes(m, 'utf-8')
-	c = pow(int.from_bytes(b, byteorder='big', signed=False), int(e), int(n))
-	return str(c)
+def encrypt(plainText):
+	plainText = plainText.strip()
+	b = bytes(plainText, 'utf-8')
+	cipherText = pow(int.from_bytes(b, byteorder='big', signed=False), int(e), int(n))
+	return str(cipherText)
 
-def decrypt(c):
-	c = c.strip()
-	m = pow(int(c), int(d), int(n))
-	b = bin(m)
+def decrypt(cipherText):
+	cipherText = cipherText.strip()
+	plainText = pow(int(cipherText), int(d), int(n))
+	b = bin(plainText)
 	bi = int(b, 2)
 	bn = bi.bit_length() * 7 // 8
 	ba = bi.to_bytes(bn, "big")
