@@ -109,7 +109,7 @@ def encryptionFile(plainText, e, p, q):
 	for index, values in enumerate(f):
 		f[index] = (values**e)%n
 
-	fin = open("./encryptedFile.jpg", 'wb')
+	fin = open("./encryptedFile.c", 'wb')
 	fin.write(f)
 	fin.close()
 	

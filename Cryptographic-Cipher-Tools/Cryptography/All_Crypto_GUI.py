@@ -115,7 +115,7 @@ def cipher():
 				new_text.insert(1.0, "New Image File in ./encryptedImage.jpg")
 			else:
 				txt = txt.strip()
-				rsaC.encryptionImage(txt, e, p, q)
+				rsaC.encryptionFile(txt, e, p, q)
 				new_text.insert(1.0, "New File in ./encryptedFile.jpg")
 			
 		enc = Button(main, text="Encrypt", bd=10, width=10, command=encrypt,bg='#3FBE7F', fg='white')
