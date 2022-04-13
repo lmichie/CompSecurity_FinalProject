@@ -61,15 +61,15 @@ def encryption(plainText, e, p, q):
 
 def encryptionImage(plainText, e, p, q):
 	n = p * q
+	plainText = plainText.strip()	
 	fin = open(plainText, 'rb')
 	image = fin.read()
 	fin.close()
-    image = bytearray(image)
+	image = bytearray(image)
 	for index, values in enumerate(image):
-	#do computation
 		image[index] = (values**e)%n
 
-	fin = open(path, 'wb')
+	fin = open(plainText, 'wb')
 	fin.write(image)
 	fin.close()
 
