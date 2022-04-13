@@ -99,3 +99,31 @@ def decryptionImage(cipherTextArray, e, p, q):
 		num += chr(c)
 	return str(num)
 
+####	 FILE	####
+def encryptionFile(plainText, e, p, q):
+	n = p * q
+	fin = open(plainText, 'rb')
+	f = fin.read()
+	fin.close()
+	f = bytearray(f)
+	for index, values in enumerate(f):
+		f[index] = (values**e)%n
+
+	fin = open("./encryptedFile.jpg", 'wb')
+	fin.write(f)
+	fin.close()
+	
+
+def decryptionFile(cipherTextArray, e, p, q):
+	phi = (p-1) * (q-1)
+	n = p * q
+	#calculate d
+	d = extended_euclid(e,phi)
+	plainText = []
+	num = ""
+	for i in range(0,len(cipherTextArray)):
+		c = (cipherTextArray[i]**d)%n
+		plainText += [c]
+		num += chr(c)
+	return str(num)
+

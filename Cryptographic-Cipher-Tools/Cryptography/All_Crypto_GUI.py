@@ -111,13 +111,13 @@ def cipher():
 				new_text.insert(1.0, enc_text)
 			elif cipher_type == "image":
 				txt = txt.strip()
-				img=Image.open(txt)
-				img=ImageTk.PhotoImage(img)
-				icon=Button(main,image=img)
-				icon.pack()
 				rsaC.encryptionImage(txt, e, p, q)
-				new_text.insert(1.0, "New Image File in encryptedImage.jpg")
-				
+				new_text.insert(1.0, "New Image File in ./encryptedImage.jpg")
+			else:
+				txt = txt.strip()
+				rsaC.encryptionImage(txt, e, p, q)
+				new_text.insert(1.0, "New File in ./encryptedFile.jpg")
+			
 		enc = Button(main, text="Encrypt", bd=10, width=10, command=encrypt,bg='#3FBE7F', fg='white')
 		enc.grid(row=0, column=2, padx=20, pady=30)
 		def decrypt():
