@@ -1,7 +1,6 @@
 import binascii
 from math import gcd
 
-
 def gen_values():
 	e = random.randrange(1,phi)
 	g = euclid(e,phi)
@@ -46,7 +45,7 @@ def extended_euclid(e,phi):
 			d += phi
 			break
 	return d
-
+####	BASIC TEXT	####
 def encryption(plainText, e, p, q):
 	n = p * q
 	plainText = plainText.strip()
@@ -58,20 +57,6 @@ def encryption(plainText, e, p, q):
 		cipherText += [c]
 		num += chr(c)
 	return str(num), cipherText
-
-def encryptionImage(plainText, e, p, q):
-	n = p * q
-	plainText = plainText.strip()	
-	fin = open(plainText, 'rb')
-	image = fin.read()
-	fin.close()
-	image = bytearray(image)
-	for index, values in enumerate(image):
-		image[index] = (values**e)%n
-
-	fin = open(plainText, 'wb')
-	fin.write(image)
-	fin.close()
 
 def decryption(cipherTextArray, e, p, q):
 	phi = (p-1) * (q-1)
@@ -85,3 +70,32 @@ def decryption(cipherTextArray, e, p, q):
 		plainText += [c]
 		num += chr(c)
 	return str(num)
+
+####	IMAGE FILE	####
+def encryptionImage(plainText, e, p, q):
+	n = p * q
+	fin = open(plainText, 'rb')
+	image = fin.read()
+	fin.close()
+	image = bytearray(image)
+	for index, values in enumerate(image):
+		image[index] = (values**e)%n
+
+	fin = open("./encryptedImage.jpg", 'wb')
+	fin.write(image)
+	fin.close()
+	
+
+def decryptionImage(cipherTextArray, e, p, q):
+	phi = (p-1) * (q-1)
+	n = p * q
+	#calculate d
+	d = extended_euclid(e,phi)
+	plainText = []
+	num = ""
+	for i in range(0,len(cipherTextArray)):
+		c = (cipherTextArray[i]**d)%n
+		plainText += [c]
+		num += chr(c)
+	return str(num)
+
