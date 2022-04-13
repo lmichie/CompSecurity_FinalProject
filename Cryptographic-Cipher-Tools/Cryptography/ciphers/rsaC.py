@@ -1,12 +1,8 @@
 import binascii
 from math import gcd
-p = 448500690975152607978063537675655100228561968640743033264994624907311301727954618776592131432970453319274164757456900360809613450208308427051224715601825715694126659023243326653708932560006426538354434994211909696350939307259469268464399327307567418024237505252087309516604048747469861472120690296679
-q = 797142830676371202783106590305499953807978464831617412146739794698696574269657813361892048534053769911087232366556200569808067035904716519320282044787921526677805285799163501701004063525600697748650815091626560388355572839685532622148490117538712600176513505164969571526664640345723199170240816113027
+
 
 def gen_values():
-	n = p * q
-	phi = (p-1) * (q-1)
-
 	e = random.randrange(1,phi)
 	g = euclid(e,phi)
 	while(g!=1):
@@ -51,17 +47,27 @@ def extended_euclid(e,phi):
 			break
 	return d
 
-def encrypt(plainTexti, e, n):
+def encryption(plainText, e, p, q):
+	n = p * q
 	plainText = plainText.strip()
-	b = bytes(plainText, 'utf-8')
-	cipherText = (int.from_bytes(b, byteorder='big', signed=False)**e) % n
-	return str(cipherText)
+	letters = list(plainText)
+	cipherText = []
+	num = ""
+	for i in range(0,len(letters)):
+		c = (ord(letters[i])**e)%n
+		cipherText += [c]
+		num += chr(c)
+	return str(num), cipherText
 
-def decrypt(cipherText):
-	cipherText = cipherText.strip()
-	plainText = pow(int(cipherText), int(d), int(n))
-	b = bin(plainText)
-	bi = int(b, 2)
-	bn = bi.bit_length() * 7 // 8
-	ba = bi.to_bytes(bn, "big")
-	return str(ba.decode())
+def decryption(cipherTextArray, e, p, q):
+	phi = (p-1) * (q-1)
+	n = p * q
+	#calculate d
+	d = extended_euclid(e,phi)
+	plainText = []
+	num = ""
+	for i in range(0,len(cipherTextArray)):
+		c = (cipherTextArray[i]**d)%n
+		plainText += [c]
+		num += chr(c)
+	return str(num)
