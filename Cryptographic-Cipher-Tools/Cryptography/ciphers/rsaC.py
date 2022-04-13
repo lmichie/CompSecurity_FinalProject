@@ -86,18 +86,23 @@ def encryptionImage(plainText, e, p, q):
 	fin.close()
 	
 
-def decryptionImage(cipherTextArray, e, p, q):
+def decryptionImage(e, p, q):
 	phi = (p-1) * (q-1)
 	n = p * q
 	#calculate d
 	d = extended_euclid(e,phi)
-	plainText = []
-	num = ""
-	for i in range(0,len(cipherTextArray)):
-		c = (cipherTextArray[i]**d)%n
-		plainText += [c]
-		num += chr(c)
-	return str(num)
+	fin = open("./encryptedImage.jpg", 'rb')
+	image = fin.read()
+	fin.close()
+	image = bytearray(image)
+	for index, values in enumerate(image):
+		image[index] = (values**e)%n
+
+	fin = open("./decryptedImage.jpg", 'wb')
+	fin.write(image)
+	fin.close()
+	for index, values in enumerate(image):
+		image[index] = (values**d)%n
 
 ####	 FILE	####
 def encryptionFile(plainText, e, p, q):
@@ -114,16 +119,21 @@ def encryptionFile(plainText, e, p, q):
 	fin.close()
 	
 
-def decryptionFile(cipherTextArray, e, p, q):
+def decryptionFile(e, p, q):
 	phi = (p-1) * (q-1)
 	n = p * q
 	#calculate d
 	d = extended_euclid(e,phi)
-	plainText = []
-	num = ""
-	for i in range(0,len(cipherTextArray)):
-		c = (cipherTextArray[i]**d)%n
-		plainText += [c]
-		num += chr(c)
-	return str(num)
+	fin = open("./encryptedFile.c", 'rb')
+	image = fin.read()
+	fin.close()
+	image = bytearray(image)
+	for index, values in enumerate(image):
+		image[index] = (values**e)%n
+
+	fin = open("./decryptedFile.c", 'wb')
+	fin.write(image)
+	fin.close()
+	for index, values in enumerate(image):
+		image[index] = (values**d)%n
 

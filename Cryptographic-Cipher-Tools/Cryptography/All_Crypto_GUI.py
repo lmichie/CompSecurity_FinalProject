@@ -116,19 +116,29 @@ def cipher():
 			else:
 				txt = txt.strip()
 				rsaC.encryptionFile(txt, e, p, q)
-				new_text.insert(1.0, "New File in ./encryptedFile.jpg")
+				new_text.insert(1.0, "New File in ./encryptedFile.c")
 			
 		enc = Button(main, text="Encrypt", bd=10, width=10, command=encrypt,bg='#3FBE7F', fg='white')
 		enc.grid(row=0, column=2, padx=20, pady=30)
 		def decrypt():
+			cipher_type = file_type.get()
 			new_text.delete('1.0', END)
 			txt = text_box.get("1.0", END)
 			e = int(key_e.get())
 			p = int(key_p.get())
 			q = int(key_q.get())
-			enc_text, cipherTextArray = rsaC.encryption(txt, e, p, q)
-			dec_text = rsaC.decryption(cipherTextArray, e, p, q)
-			new_text.insert(1.0, dec_text)
+			if cipher_type == "text":	
+				enc_text, cipherTextArray = rsaC.encryption(txt, e, p, q)
+				dec_text = rsaC.decryption(cipherTextArray, e, p, q)
+				new_text.insert(1.0, dec_text)
+			elif cipher_type == "image":
+				txt = txt.strip()
+				rsaC.decryptionImage(e, p, q)
+				new_text.insert(1.0, "New Image File in ./decryptedImage.jpg")
+			else:
+				txt = txt.strip()
+				rsaC.decryptionFile(e, p, q)
+				new_text.insert(1.0, "New File in ./decryptedFile.c")
 
 		dec = Button(main, text="Decrypt", bd=10, width=10, command=decrypt,bg='tomato2', fg='white')
 		dec.grid(row=0, column=3, padx=10, pady=10)
