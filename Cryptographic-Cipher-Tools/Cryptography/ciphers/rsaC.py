@@ -113,6 +113,7 @@ def encryptionFile(plainText, e, p, q):
 	f = bytearray(f)
 	for index, values in enumerate(f):
 		f[index] = (values**e)%n
+		print(f[index])
 
 	fin = open("./encryptedFile.c", 'wb')
 	fin.write(f)
@@ -129,7 +130,8 @@ def decryptionFile(e, p, q):
 	fin.close()
 	image = bytearray(image)
 	for index, values in enumerate(image):
-		image[index] = (values**e)%n
+		print(values)
+		image[index] = (values**d)%n
 
 	fin = open("./decryptedFile.c", 'wb')
 	fin.write(image)

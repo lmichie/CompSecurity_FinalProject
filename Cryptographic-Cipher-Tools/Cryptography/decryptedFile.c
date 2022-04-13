@@ -1,5 +1,5 @@
-=OncR4d VçZdOoHÇå
-OnZ mGOnvj 
-~ä$OnZ%v".RRo, Wo$Rd!"j|
-~$Z4$n q|
-/
+#include <stdio.h>
+int main() {
+	printf("Hello, World!");
+	return 0;
+}
