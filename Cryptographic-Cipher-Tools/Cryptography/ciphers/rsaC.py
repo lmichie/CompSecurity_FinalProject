@@ -96,7 +96,7 @@ def decryptionImage(e, p, q):
 	fin.close()
 	image = bytearray(image)
 	for index, values in enumerate(image):
-		image[index] = (values**e)%n
+		image[index] = (values**d)%n
 
 	fin = open("./decryptedImage.jpg", 'wb')
 	fin.write(image)
