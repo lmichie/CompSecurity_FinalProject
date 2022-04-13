@@ -59,6 +59,20 @@ def encryption(plainText, e, p, q):
 		num += chr(c)
 	return str(num), cipherText
 
+def encryptionImage(plainText, e, p, q):
+	n = p * q
+	fin = open(plainText, 'rb')
+	image = fin.read()
+	fin.close()
+    image = bytearray(image)
+	for index, values in enumerate(image):
+	#do computation
+		image[index] = (values**e)%n
+
+	fin = open(path, 'wb')
+	fin.write(image)
+	fin.close()
+
 def decryption(cipherTextArray, e, p, q):
 	phi = (p-1) * (q-1)
 	n = p * q

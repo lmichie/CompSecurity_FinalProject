@@ -53,7 +53,7 @@ def cipher():
 
 	def lab():
 
-		text_label = Label(main, text="Enter text: ", font=('fixedsys', 16, "bold"), bg="tomato", fg="white")
+		text_label = Label(main, text="Enter text: ", font=('fixedsys', 16, "bold"), fg="black")
 		text_label.grid(row=0, column=0, padx=20, pady=20)
 
 		scroll_text = ttk.Scrollbar(main, orient=VERTICAL)
@@ -74,14 +74,11 @@ def cipher():
 	def RSA_cipher():  # 1st cipher
 		remove()
 
-		key_label = Label(main, text="Enter e: ", font=('fixedsys', 14), pady=15,
-						  bg='black', fg="cyan")
+		key_label = Label(main, text="Enter e: ", font=('fixedsys', 14), pady=15, fg="black")
 		key_label.grid(row=2, column=0)
-		key_label = Label(main, text="Enter p: ", font=('fixedsys', 14), pady=15,
-						  bg='black', fg="cyan")
+		key_label = Label(main, text="Enter p: ", font=('fixedsys', 14), pady=15, fg="black")
 		key_label.grid(row=2, column=1)
-		key_label = Label(main, text="Enter q: ", font=('fixedsys', 14), pady=15,
-						  bg='black', fg="cyan")
+		key_label = Label(main, text="Enter q: ", font=('fixedsys', 14), pady=15, fg="black")
 		key_label.grid(row=2, column=2)
 		key_e = Entry(main, width=20)
 		key_e.grid(row=3, column=0, padx=10, pady=10)
@@ -93,20 +90,28 @@ def cipher():
 		text_box, new_text = lab()
 		sample = ""
 		new_text.insert(1.0, sample)
-		label = Label(main, text="RSA Encryption" , font=('Times New Roman', 16, "bold"),bg="#FDA73F")
+		label = Label(main, text="RSA Encryption" , font=('Times New Roman', 16, "bold"),bg="white")
 		label.grid(row=0, column=1)
 		
 		#Add insert file/image selection
+		file_type = ttk.Combobox(main)
+		file_type['values'] = ("text", "image", "file")
+		file_type.current(0)
+		file_type.grid(row=5, column=0)
 
 		def encrypt():
+			cipher_type = file_type.get()
 			new_text.delete('1.0', END)
 			txt = text_box.get("1.0", END)
 			e = int(key_e.get())
 			p = int(key_p.get())
 			q = int(key_q.get())
-			enc_text, cipherTextArray = rsaC.encryption(txt, e, p, q)
-			new_text.insert(1.0, enc_text)
-
+			if cipher_type == "text":
+				enc_text, cipherTextArray = rsaC.encryption(txt, e, p, q)
+				new_text.insert(1.0, enc_text)
+			elif cipher_type == "image":
+				rsaC.encryptionImage(txt, e, p, q)
+				
 		enc = Button(main, text="Encrypt", bd=10, width=10, command=encrypt,bg='#3FBE7F', fg='white')
 		enc.grid(row=0, column=2, padx=20, pady=30)
 		def decrypt():
