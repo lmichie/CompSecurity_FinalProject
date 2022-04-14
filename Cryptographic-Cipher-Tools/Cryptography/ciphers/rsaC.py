@@ -1,4 +1,5 @@
 import binascii
+import zlib
 from math import gcd
 
 def gen_values():
@@ -77,14 +78,13 @@ def encryptionImage(plainText, e, p, q):
 	fin = open(plainText, 'rb')
 	image = fin.read()
 	fin.close()
-	image = bytearray(image)
-	for index, values in enumerate(image):
-		image[index] = (values**e)%n
-
+	image = bytes(image)
+	image = pow(int.from_bytes(image, byteorder='big', signed=False), int(e), int(n))
+	image = image.to_bytes(bn, "big")
 	fin = open("./encryptedImage.jpg", 'wb')
 	fin.write(image)
 	fin.close()
-	
+
 
 def decryptionImage(e, p, q):
 	phi = (p-1) * (q-1)
@@ -97,12 +97,9 @@ def decryptionImage(e, p, q):
 	image = bytearray(image)
 	for index, values in enumerate(image):
 		image[index] = (values**d)%n
-
 	fin = open("./decryptedImage.jpg", 'wb')
 	fin.write(image)
 	fin.close()
-	for index, values in enumerate(image):
-		image[index] = (values**d)%n
 
 ####	 FILE	####
 def encryptionFile(plainText, e, p, q):
@@ -113,12 +110,11 @@ def encryptionFile(plainText, e, p, q):
 	f = bytearray(f)
 	for index, values in enumerate(f):
 		f[index] = (values**e)%n
-		print(f[index])
 
 	fin = open("./encryptedFile.c", 'wb')
 	fin.write(f)
 	fin.close()
-	
+
 
 def decryptionFile(e, p, q):
 	phi = (p-1) * (q-1)
@@ -130,12 +126,9 @@ def decryptionFile(e, p, q):
 	fin.close()
 	image = bytearray(image)
 	for index, values in enumerate(image):
-		print(values)
 		image[index] = (values**d)%n
 
 	fin = open("./decryptedFile.c", 'wb')
 	fin.write(image)
 	fin.close()
-	for index, values in enumerate(image):
-		image[index] = (values**d)%n
 
