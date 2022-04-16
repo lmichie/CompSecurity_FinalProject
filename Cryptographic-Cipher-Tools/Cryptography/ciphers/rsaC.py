@@ -1,18 +1,5 @@
 import binascii
-import zlib
 from math import gcd
-
-def gen_values():
-	e = random.randrange(1,phi)
-	g = euclid(e,phi)
-	while(g!=1):
-		e = random.randrange(1,phi)
-		g = euclid(e,phi)
-
-	d = extended_euclid(e,phi)
-	public_key=(e,n)
-	private_key=(d,n)
-	return e, d, n
 
 def euclid(a, b):
 	if b==0:
@@ -46,6 +33,7 @@ def extended_euclid(e,phi):
 			d += phi
 			break
 	return d
+
 ####	BASIC TEXT	####
 def encryption(plainText, e, p, q):
 	n = p * q
@@ -75,29 +63,29 @@ def decryption(cipherTextArray, e, p, q):
 ####	IMAGE FILE	####
 def encryptionImage(plainText, e, p, q):
 	n = p * q
-	fin = open(plainText, 'rb')
-	image = fin.read()
-	fin.close()
-	image = bytes(image)
-	image = pow(int.from_bytes(image, byteorder='big', signed=False), int(e), int(n))
-	image = image.to_bytes(bn, "big")
-	fin = open("./encryptedImage.jpg", 'wb')
+	f = open(plainText, 'rb')
+	image = f.read()
+	image = bytearray(image)
+	for index, values in enumerate(image):
+		image[index] = (values**e)%n
+
+	fin = open("./encryptedImage.jpeg", 'wb')
 	fin.write(image)
 	fin.close()
-
+	f.close()
 
 def decryptionImage(e, p, q):
 	phi = (p-1) * (q-1)
 	n = p * q
 	#calculate d
 	d = extended_euclid(e,phi)
-	fin = open("./encryptedImage.jpg", 'rb')
+	fin = open("./encryptedImage.jpeg", 'rb')
 	image = fin.read()
 	fin.close()
 	image = bytearray(image)
 	for index, values in enumerate(image):
 		image[index] = (values**d)%n
-	fin = open("./decryptedImage.jpg", 'wb')
+	fin = open("./decryptedImage.jpeg", 'wb')
 	fin.write(image)
 	fin.close()
 
@@ -122,13 +110,13 @@ def decryptionFile(e, p, q):
 	#calculate d
 	d = extended_euclid(e,phi)
 	fin = open("./encryptedFile.c", 'rb')
-	image = fin.read()
+	f = fin.read()
 	fin.close()
-	image = bytearray(image)
-	for index, values in enumerate(image):
-		image[index] = (values**d)%n
+	f = bytearray(f)
+	for index, values in enumerate(f):
+		f[index] = (values**d)%n
 
 	fin = open("./decryptedFile.c", 'wb')
-	fin.write(image)
+	fin.write(f)
 	fin.close()
 
