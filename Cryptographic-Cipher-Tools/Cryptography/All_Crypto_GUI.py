@@ -133,7 +133,6 @@ def cipher():
 				new_text.insert(1.0, dec_text)
 			elif cipher_type == "image":
 				txt = txt.strip()
-				rsaC.decryptionImage(e, p, q)
 				new_text.insert(1.0, "New Image File in ./decryptedImage.jpg")
 			else:
 				txt = txt.strip()
