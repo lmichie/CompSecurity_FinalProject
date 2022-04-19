@@ -1,4 +1,7 @@
 import binascii
+import matplotlib.pyplot as plt
+import matplotlib.image as io
+from PIL import Image
 from math import gcd
 
 def euclid(a, b):
@@ -63,31 +66,48 @@ def decryption(cipherTextArray, e, p, q):
 ####	IMAGE FILE	####
 def encryptionImage(plainText, e, p, q):
 	n = p * q
-	f = open(plainText, 'rb')
-	image = f.read()
-	image = bytearray(image)
-	for index, values in enumerate(image):
-		image[index] = (values**e)%n
-
-	fin = open("./encryptedImage.jpeg", 'wb')
-	fin.write(image)
-	fin.close()
-	f.close()
-
-def decryptionImage(e, p, q):
+	my_img = io.imread(plainText)
+	height, width = my_img.shape[0], my_img.shape[1]
+	encrypt = [[0 for x in range(10000)] for y in range(10000)]
+	for i in range(0, height):
+		for j in range(0, width):
+			r, g, b = my_img[i, j]
+			print(my_img[i,j])
+			C1 = (r**e)%n
+			C2 = (g**e)%n
+			C3 = (b**e)%n
+			encrypt[i][j] = [C1, C2, C3]
+			C1 = C1 % 256
+			C2 = C2 % 256
+			C3 = C3 % 256
+			my_img[i, j] = [C1, C2, C3]
+	io.imsave("./encryptedImage.jpeg",my_img)
+	
 	phi = (p-1) * (q-1)
-	n = p * q
-	#calculate d
 	d = extended_euclid(e,phi)
-	fin = open("./encryptedImage.jpeg", 'rb')
-	image = fin.read()
-	fin.close()
-	image = bytearray(image)
-	for index, values in enumerate(image):
-		image[index] = (values**d)%n
-	fin = open("./decryptedImage.jpeg", 'wb')
-	fin.write(image)
-	fin.close()
+	for i in range(0, height):
+		for j in range(0, width):
+			r, g, b = encrypt[i][j]
+			M1 = pow(int(r),d,n)
+			M2 = (int(g)**d)%n
+			M3 = (int(b)**d)%n
+			my_img[i, j] = [M1, M2, M3]
+	io.imsave("./decryptedImage.jpeg",my_img)
+	
+def decryptionImage(e, p, q, encrypt, height, width):
+		phi = (p-1) * (q-1)
+		d = extended_euclid(e,phi)
+		for i in range(0, height):
+			for j in range(0, width):
+				print(encrypt[i][j])
+				r, g, b = 1, 2, 3
+				M1 = (r**d)%n
+				M2 = (g**d)%n
+				M3 = (b**d)%n
+				my_img[i, j] = [M1, M2, M3]
+		fin = open("./decryptedImage.jpeg", 'wb')
+		fin.write(my_img)
+		fin.close()
 
 ####	 FILE	####
 def encryptionFile(plainText, e, p, q):
