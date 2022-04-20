@@ -73,16 +73,16 @@ def encryptionImage(plainText, e, p, q):
 		for j in range(0, width):
 			r, g, b = my_img[i, j]
 			print(my_img[i,j])
-			C1 = (r**e)%n
-			C2 = (g**e)%n
-			C3 = (b**e)%n
+			C1 = (int(r)**e)%n
+			C2 = (int(g)**e)%n
+			C3 = (int(b)**e)%n
 			encrypt[i][j] = [C1, C2, C3]
 			C1 = C1 % 256
 			C2 = C2 % 256
 			C3 = C3 % 256
 			my_img[i, j] = [C1, C2, C3]
 	io.imsave("./encryptedImage.jpeg",my_img)
-	
+	print("-----------------------------------")	
 	phi = (p-1) * (q-1)
 	d = extended_euclid(e,phi)
 	for i in range(0, height):
@@ -92,6 +92,7 @@ def encryptionImage(plainText, e, p, q):
 			M2 = (int(g)**d)%n
 			M3 = (int(b)**d)%n
 			my_img[i, j] = [M1, M2, M3]
+			print(my_img[i,j])
 	io.imsave("./decryptedImage.jpeg",my_img)
 	
 def decryptionImage(e, p, q, encrypt, height, width):
@@ -99,7 +100,6 @@ def decryptionImage(e, p, q, encrypt, height, width):
 		d = extended_euclid(e,phi)
 		for i in range(0, height):
 			for j in range(0, width):
-				print(encrypt[i][j])
 				r, g, b = 1, 2, 3
 				M1 = (r**d)%n
 				M2 = (g**d)%n
