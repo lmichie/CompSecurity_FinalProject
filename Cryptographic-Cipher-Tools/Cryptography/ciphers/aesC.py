@@ -244,14 +244,14 @@ def encrypt_file(filename, key, blocksize=16):
         pad_length = 16 - (len(text) % 16)
         text += bytes([pad_length]) * pad_length
     cipher = encrypt(text, key)
-    cipher = bytes(cipher).hex()
-    with open('./encryptedFile.c', 'w', newline="\n") as out:
+    cipher = bytes(cipher)
+    with open('./encryptedFile.c', 'wb') as out:
         out.write(cipher)
     return "./encryptedFile.c"
 
 def decrypt_file(filename, key, blocksize=16):
-    with open(filename, "r", newline="\n") as cipher_file:
-        cipher = bytes.fromhex(cipher_file.read())
+    with open(filename, "rb") as cipher_file:
+        cipher = bytes(cipher_file.read())
     text = decrypt(cipher, key)
     if blocksize:
         text = text[:-text[-1]]
