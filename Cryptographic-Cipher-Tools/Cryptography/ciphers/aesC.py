@@ -150,47 +150,53 @@ def inv_mix_columns(state):
 
 def encrypt(message, key, nrounds=10):
     if isinstance(message, bytes) or isinstance(message, bytearray):
-        state = list(message)
+        message = list(message)
     elif isinstance(message, str):
-        state = list(map(ord, message))
+        message = list(map(ord, message))
     else:
-        state = list(message)
-        
-    exp_key = expand_key(key, nrounds)
+        message = list(message)
     
-    state = add_round_key(state, exp_key[0:16])
-    for r in range(1, nrounds):
+    exp_key = expand_key(key, nrounds)
+        
+    cipher = []
+    for iblock in range(0, len(message), 16):
+        state = message[iblock:iblock+16]
+        state = add_round_key(state, exp_key[0:16])
+        for r in range(1, nrounds):
+            state = sub_bytes(state)
+            state = shift_rows(state)
+            state = mix_columns(state)
+            state = add_round_key(state, exp_key[r * 16 : (r + 1) * 16])
         state = sub_bytes(state)
         state = shift_rows(state)
-        state = mix_columns(state)
-        state = add_round_key(state, exp_key[r * 16 : (r + 1) * 16])
-    state = sub_bytes(state)
-    state = shift_rows(state)
-    state = add_round_key(state, exp_key[nrounds * 16 :])
-    
-    return list(state)
+        state = add_round_key(state, exp_key[nrounds * 16 :])
+        cipher.extend(state)
+    return cipher
 
 def decrypt(cipher, key, nrounds=10):
     if isinstance(cipher, bytes) or isinstance(cipher, bytearray):
-        state = list(cipher)
+        cipher = list(cipher)
     elif isinstance(cipher, str):
-        state = list(map(ord, cipher))
+        cipher = list(map(ord, cipher))
     else:
-        state = list(cipher)
+        cipher = list(cipher)
         
     exp_key = expand_key(key, nrounds)
     
-    state = add_round_key(state, exp_key[nrounds*16:(nrounds+1)*16])
-    state = inv_shift_rows(state)
-    state = inv_sub_bytes(state)
-    for r in range(nrounds-1, 0, -1):
-        state = add_round_key(state, exp_key[r * 16 : (r + 1) * 16])
-        state = inv_mix_columns(state)
+    message = []
+    for iblock in range(0, len(cipher), 16):
+        state = cipher[iblock:iblock+16]
+        state = add_round_key(state, exp_key[nrounds*16:(nrounds+1)*16])
         state = inv_shift_rows(state)
         state = inv_sub_bytes(state)
-    state = add_round_key(state, exp_key[0:16])
-    
-    return list(state)
+        for r in range(nrounds-1, 0, -1):
+            state = add_round_key(state, exp_key[r * 16 : (r + 1) * 16])
+            state = inv_mix_columns(state)
+            state = inv_shift_rows(state)
+            state = inv_sub_bytes(state)
+        state = add_round_key(state, exp_key[0:16])
+        message.extend(state)
+    return message
 
 
 def encrypt_text(text, key, blocksize=16):
@@ -218,7 +224,7 @@ def encrypt_image(filename, key, blocksize=16):
         img += bytes([pad_length]) * pad_length
     cipher = encrypt(img, key)
     with open('./encryptedImage.jpeg', 'wb') as out:
-        out.write(cipher)
+        out.write(bytes(cipher))
     return "./encryptedImage.jpeg"
 	
 def decrypt_image(filename, key, blocksize=16):
@@ -228,28 +234,28 @@ def decrypt_image(filename, key, blocksize=16):
     if blocksize:
         img = img[:-img[-1]]
     with open('./decryptedImage.jpeg', 'wb') as out:
-        out.write(img)
+        out.write(bytes(img))
     return './decryptedImage.jpeg'
 
 def encrypt_file(filename, key, blocksize=16):
-    with open(filename, "r") as text_file:
+    with open(filename, "r", newline="\n") as text_file:
         text = bytes(text_file.read(), encoding='utf8')
     if blocksize:
         pad_length = 16 - (len(text) % 16)
         text += bytes([pad_length]) * pad_length
     cipher = encrypt(text, key)
-    cipher = ''.join(chr(p) for p in cipher)
-    with open('./encryptedFile.c', 'w') as out:
+    cipher = bytes(cipher).hex()
+    with open('./encryptedFile.c', 'w', newline="\n") as out:
         out.write(cipher)
     return "./encryptedFile.c"
 
 def decrypt_file(filename, key, blocksize=16):
-    with open(filename, "r") as cipher_file:
-        cipher = bytes(cipher_file.read(), encoding='utf8')
+    with open(filename, "r", newline="\n") as cipher_file:
+        cipher = bytes.fromhex(cipher_file.read())
     text = decrypt(cipher, key)
     if blocksize:
         text = text[:-text[-1]]
-    text = text.decode("utf-8") 
-    with open('./decryptedFile.c', 'w') as out:
+    text = bytes(text).decode("utf-8") 
+    with open('./decryptedFile.c', 'w', newline="\n") as out:
         out.write(text)
     return "./decryptedFile.c"

@@ -242,86 +242,76 @@ def cipher():
 		def encrypt():
 			cipher_type = file_type.get()
 			new_text.delete('1.0', END)
-			txt = text_box.get("1.0", END)
+			txt = text_box.get("1.0", END).strip()
 			key = entry_key.get().strip()
 			key = list(bytes(key, encoding='utf-8'))
 			if cipher_type == "text":
 				enc_text = aesC.encrypt_text(txt, key)
 				new_text.insert(1.0, enc_text)
-			# elif cipher_type == "image":
-			# 	txt = txt.strip()
-			# 	rsaC.encryptionImage(txt, key)
-			# 	new_text.insert(1.0, "New Image File in ./encryptedImage.jpg")
-			# else:
-			# 	txt = txt.strip()
-			# 	rsaC.encryptionFile(txt, e, p, q)
-			# 	new_text.insert(1.0, "New File in ./encryptedFile.c")
+			elif cipher_type == "image":
+				filename = txt
+				outfilename = aesC.encrypt_image(filename, key)
+				new_text.insert(1.0, outfilename)
+			else:
+				filename = txt
+				outfilename = aesC.encrypt_file(filename, key)
+				new_text.insert(1.0, outfilename)
 			
 		enc = Button(main, text="Encrypt", bd=10, width=10, command=encrypt,bg='#3FBE7F', fg='white')
 		enc.grid(row=0, column=2, padx=20, pady=30)
 		def decrypt():
 			cipher_type = file_type.get()
 			text_box.delete('1.0', END)
-			txt = new_text.get("1.0", END)
+			txt = new_text.get("1.0", END).strip()
 			key = entry_key.get().strip()
 			key = list(bytes(key, encoding='utf-8'))
 			if cipher_type == "text":	
 				dec_text = aesC.decrypt_text(txt, key)
 				text_box.insert(1.0, dec_text)
-			# elif cipher_type == "image":
-			# 	txt = txt.strip()
-			# 	new_text.insert(1.0, "New Image File in ./decryptedImage.jpg")
-			# else:
-			# 	txt = txt.strip()
-			# 	rsaC.decryptionFile(e, p, q)
-			# 	new_text.insert(1.0, "New File in ./decryptedFile.c")
+			elif cipher_type == "image":
+				filename = txt
+				outfilename = aesC.decrypt_image(filename, key)
+				text_box.insert(1.0, outfilename)
+			else:
+				filename = txt
+				outfilename = aesC.decrypt_file(filename, key)
+				text_box.insert(1.0, outfilename)
 
 		dec = Button(main, text="Decrypt", bd=10, width=10, command=decrypt,bg='tomato2', fg='white')
 		dec.grid(row=0, column=3, padx=10, pady=10)
 
-	###########################################################################################################################
-	# buttons on window left lide
+	btn_rsa = Button(left_frame, padx=20, bd=10, text='RSA Cipher', width=20, height=3, command=RSA_cipher,
+                     bg='white', fg='red', activebackground='black', font=('arial', 16, 'bold'),
+					 activeforeground='#3FBE4F')
+	btn_rsa.grid(row=1, column=0)
 
-	RSA = Button(left_frame, padx=20, bd=10, text='RSA Cipher', width=20, height=3, command=RSA_cipher,
-					bg='white', fg='red', activebackground='black', font=('arial', 16, 'bold'),
-					activeforeground='#3FBE4F')
-	RSA.grid(row=1, column=0)
-
-
-	vignere = Button(left_frame, padx=20, bd=10, text='Vignere Cipher', width=20, height=3, command=vignere_cipher,
+	btn_vig = Button(left_frame, padx=20, bd=10, text='Vignere Cipher', width=20, height=3, command=vignere_cipher,
 					 bg='white', fg='red', activebackground='black', font=('arial', 16, 'bold'),
 					 activeforeground='#3FBE4F')
-	vignere.grid(row=2, column=0)
+	btn_vig.grid(row=2, column=0)
 
+	btn_des3 = Button(left_frame, padx=20, bd=10, text='Triple DES Cipher', width=20, height=3,
+					  command=DES3_cipher, bg='white', fg='red', activebackground='black',
+					  font=('arial', 16, 'bold'), activeforeground='#3FBE4F')
+	btn_des3.grid(row=3, column=0)
 
+	btn_aes = Button(left_frame, padx=20, bd=10, text='AES Cipher', width=26, height=3,
+				     command=AES_cipher, bg='white', fg='red', font=('arial', 12, 'bold'),
+					 activebackground='black', activeforeground='SeaGreen1')
+	btn_aes.grid(row=4, column=0)
 
-	DES3 = Button(left_frame, padx=20, bd=10, text='Triple DES Cipher', width=20, height=3,
-					   command=DES3_cipher, bg='white', fg='red', activebackground='black',
-					   font=('arial', 16, 'bold'), activeforeground='#3FBE4F')
-	DES3.grid(row=3, column=0)
-
-
-
-
-
-	AES = Button(left_frame, padx=20, bd=10, text='AES Cipher', width=26, height=3,
-					  command=AES_cipher, bg='white', fg='red', font=('arial', 12, 'bold'),
-					  activebackground='black', activeforeground='SeaGreen1')
-	AES.grid(row=4, column=0)
-
-
-	Exit = Button(left_frame, text="Exit", padx=20, bd=10, width=23,height=3, command=window.destroy, activebackground="white",
+	btn_exit = Button(left_frame, text="Exit", padx=20, bd=10, width=23,height=3, command=window.destroy, activebackground="white",
 				  bg='black', fg="white", font=('arial', 12, 'bold'), activeforeground="black")
-	Exit.grid(row=15, column=0)
+	btn_exit.grid(row=15, column=0)
 
 	window.mainloop()
 
 
-Welcome_label = Label(root, text="Computer Security Final Project\n Topic 1 by: Lindsey Michie, Gabriel Simoes & Marcelo Piccolotto", padx=10, pady=30, bg="light gray", fg="black",
+label_welcome = Label(root, text="Computer Security Final Project\n Topic 1 by: Lindsey Michie, Gabriel Simoes & Marcelo Piccolotto", padx=10, pady=30, bg="light gray", fg="black",
 					  font=("Helvetica", 20, "bold")).pack(pady=30)
-chiper_button = Button(root, text="Algorithms", padx=20, bd=10, width=20, height=3, command=cipher, bg="light gray",
-					   fg="black", activebackground='black', activeforeground='white')
-chiper_button.pack(pady=30)
+btn_cipher = Button(root, text="Algorithms", padx=20, bd=10, width=20, height=3, command=cipher, bg="light gray",
+					fg="black", activebackground='black', activeforeground='white')
+btn_cipher.pack(pady=30)
 
 
 root.mainloop()
