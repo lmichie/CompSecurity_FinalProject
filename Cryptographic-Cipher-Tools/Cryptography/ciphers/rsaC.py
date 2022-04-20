@@ -45,7 +45,7 @@ def encryption(plainText, e, p, q):
 	cipherText = []
 	num = ""
 	for i in range(0,len(letters)):
-		c = (ord(letters[i])**e)%n
+		c = pow(ord(letters[i]), e, n)
 		cipherText += [c]
 		num += chr(c)
 	return str(num), cipherText
@@ -58,7 +58,7 @@ def decryption(cipherTextArray, e, p, q):
 	plainText = []
 	num = ""
 	for i in range(0,len(cipherTextArray)):
-		c = (cipherTextArray[i]**d)%n
+		c = pow(cipherTextArray[i], d, n)
 		plainText += [c]
 		num += chr(c)
 	return str(num)
@@ -72,9 +72,9 @@ def encryptionImage(plainText, e, p, q):
 	for i in range(0, height):
 		for j in range(0, width):
 			r, g, b = my_img[i, j]
-			C1 = (int(r)**e)%n
-			C2 = (int(g)**e)%n
-			C3 = (int(b)**e)%n
+			C1 = pow(int(r), e, n)
+			C2 = pow(int(g), e, n)
+			C3 = pow(int(b), e, n)
 			encrypt[i][j] = [C1, C2, C3]
 			C1 = C1 % 256
 			C2 = C2 % 256
@@ -86,9 +86,9 @@ def encryptionImage(plainText, e, p, q):
 	for i in range(0, height):
 		for j in range(0, width):
 			r, g, b = encrypt[i][j]
-			M1 = pow(int(r),d,n)
-			M2 = (int(g)**d)%n
-			M3 = (int(b)**d)%n
+			M1 = pow(int(r), d, n)
+			M2 = pow(int(g), d, n)
+			M3 = pow(int(b), d, n)
 			my_img[i, j] = [M1, M2, M3]
 	io.imsave("./decryptedImage.jpeg",my_img)
 	
@@ -101,7 +101,7 @@ def encryptionFile(plainText, e, p, q):
 	fin.close()
 	f = bytearray(f)
 	for index, values in enumerate(f):
-		f[index] = (values**e)%n
+		f[index] = pow(values, e, n)
 
 	fin = open("./encryptedFile.c", 'wb')
 	fin.write(f)
@@ -118,7 +118,7 @@ def decryptionFile(e, p, q):
 	fin.close()
 	f = bytearray(f)
 	for index, values in enumerate(f):
-		f[index] = (values**d)%n
+		f[index] = pow(values, d, n)
 
 	fin = open("./decryptedFile.c", 'wb')
 	fin.write(f)
