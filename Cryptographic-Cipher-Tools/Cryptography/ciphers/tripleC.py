@@ -1,5 +1,5 @@
 import binascii
-from math import gcd
+from bitstring import BitArray
 
 permutation_table_1 = [56, 48, 40, 32, 24, 16,  8,
                        0, 57, 49, 41, 33, 25, 17,
@@ -283,6 +283,14 @@ def triple_DES_encryption(plainText, key_1, key_2, key_3):
 
     return DES_encryption_binary(plain_binary, key_3)
 
+def triple_DES_encryption_binary(plainBinary, key_1, key_2, key_3):
+
+    cyphertext_binary = DES_encryption_binary(plainBinary, key_1)
+
+    plain_binary = DES_decryption(cyphertext_binary, key_2)
+
+    return DES_encryption_binary(plain_binary, key_3)
+
 
 def triple_DES_decryption(cypherText, key_1, key_2, key_3):
 
@@ -293,6 +301,53 @@ def triple_DES_decryption(cypherText, key_1, key_2, key_3):
     plain_binary = DES_decryption(cyphertext_binary, key_1)
 
     return plain_binary
+
+def bitstring_to_bit_arrray(binary):
+    result = []
+    for bit in binary:
+        if bit == '1':
+            result.append(1)
+        else:
+            result.append(0)
+    return result
+
+
+def encrypt_image(filename, key1, key2, key3):
+    with open(filename, "rb") as img_file:
+        img = bytes(img_file.read())
+    plain_binary = BitArray(img)
+    cipher = triple_DES_encryption_binary(plain_binary.bin, key1, key2, key3)
+    with open('./encryptedImage.jpeg', 'wb') as out:
+        out.write(bytes(bitstring_to_bit_arrray(cipher)))
+    return "./encryptedImage.jpeg"
+
+def decrypt_image(filename, key1, key2, key3):
+    with open(filename, "rb") as cipher_file:
+        cipher = bytes(cipher_file.read())
+    plain_binary = BitArray(cipher)
+    img = triple_DES_decryption(plain_binary.bin, key1, key2, key3)
+    with open('./decryptedImage.jpeg', 'wb') as out:
+        out.write(bytes(bitstring_to_bit_arrray(img)))
+    return './decryptedImage.jpeg'
+
+def encrypt_file(filename,  key1, key2, key3):
+    with open(filename, "r", newline="\n") as text_file:
+        text = bytes(text_file.read(), encoding='utf8')
+    plain_binary = BitArray(text)
+    cipher = triple_DES_encryption_binary(plain_binary.bin, key1, key2, key3)
+    with open('./encryptedFile.c', 'wb') as out:
+        out.write(bytes(bitstring_to_bit_arrray(cipher)))
+    return "./encryptedFile.c"
+
+def decrypt_file(filename, key1, key2, key3):
+    with open(filename, "rb") as cipher_file:
+        cipher = bytes(cipher_file.read())
+    plain_binary = BitArray(cipher)
+    text = triple_DES_decryption(plain_binary.bin, key1, key2, key3)
+    text = bytes(bitstring_to_bit_arrray(text)).decode("utf-8") 
+    with open('./decryptedFile.c', 'w', newline="\n") as out:
+        out.write(text)
+    return "./decryptedFile.c"
 
 
 def binary_to_plaintext(binary):

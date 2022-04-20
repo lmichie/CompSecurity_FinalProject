@@ -5,7 +5,7 @@ import webbrowser
 from tkinter import ttk
 from time import strftime
 from PIL import Image, ImageTk
-from ciphers import rsaC, vignereC, aesC
+from ciphers import rsaC, vignereC, aesC, tripleC
 
 
 root = Tk()
@@ -184,36 +184,68 @@ def cipher():
 	def DES3_cipher():
 		remove()
 
-		list_key = ttk.Combobox(main)
-		list_key['values'] = (2, 3, 4, 5, 6, 7, 8)
-		list_key.current(0)
-		list_key.grid(row=5, column=0)
+		label_key = Label(main, text="Enter 64-bit binary keys: ", font=('fixedsys', 14), pady=15, fg="black")
+		label_key.grid(row=2, column=0)
+		entry_key_1 = Entry(main, width=20)
+		entry_key_1.grid(row=3, column=0, padx=10, pady=10)
+		entry_key_2 = Entry(main, width=20)
+		entry_key_2.grid(row=4, column=0, padx=10, pady=10)
+		entry_key_3 = Entry(main, width=20)
+		entry_key_3.grid(row=5, column=0, padx=10, pady=10)
 
 		text_box, new_text = lab()
-		sample = " "
+		sample = ""
 		new_text.insert(1.0, sample)
-		label = Label(main, text="Triple DES")
+		label = Label(main, text="3DES Encryption" , font=('Times New Roman', 16, "bold"), bg="white")
 		label.grid(row=0, column=1)
+		
+		file_type = ttk.Combobox(main)
+		file_type['values'] = ("text", "image", "file")
+		file_type.current(0)
+		file_type.grid(row=6, column=0)
 
 		def encrypt():
+			cipher_type = file_type.get()
 			new_text.delete('1.0', END)
-			string = (text_box.get("1.0", END)).strip()
-			key = int(list_key.get())
-			enc_text = railfenceC.encrypt(string, key)
-			new_text.insert(1.0, enc_text)
-
+			txt = text_box.get("1.0", END).strip()
+			key1 = entry_key_1.get().strip()
+			key2 = entry_key_2.get().strip()
+			key3 = entry_key_3.get().strip()
+			if cipher_type == "text":
+				enc_text = tripleC.triple_DES_encryption(txt, key1, key2, key3)
+				new_text.insert(1.0, enc_text)
+			elif cipher_type == "image":
+				filename = txt
+				outfilename = tripleC.encrypt_image(filename, key1, key2, key3)
+				new_text.insert(1.0, outfilename)
+			else:
+				filename = txt
+				outfilename = tripleC.encrypt_file(filename, key1, key2, key3)
+				new_text.insert(1.0, outfilename)
+			
 		enc = Button(main, text="Encrypt", bd=10, width=10, command=encrypt,bg='#3FBE7F', fg='white')
 		enc.grid(row=0, column=2, padx=20, pady=30)
-
 		def decrypt():
-			new_text.delete('1.0', END)
-			string = (text_box.get("1.0", END)).strip()
-			key = int(list_key.get())
-			dec_text = railfenceC.decrypt(string, key)
-			new_text.insert(1.0, dec_text)
+			cipher_type = file_type.get()
+			text_box.delete('1.0', END)
+			txt = new_text.get("1.0", END).strip()
+			key1 = entry_key_1.get().strip()
+			key2 = entry_key_2.get().strip()
+			key3 = entry_key_3.get().strip()
+			if cipher_type == "text":	
+				dec_text = tripleC.triple_DES_decryption(txt, key1, key2, key3)
+				dec_text = tripleC.binary_to_plaintext(dec_text)
+				text_box.insert(1.0, dec_text)
+			elif cipher_type == "image":
+				filename = txt
+				outfilename = tripleC.decrypt_image(filename, key1, key2, key3)
+				text_box.insert(1.0, outfilename)
+			else:
+				filename = txt
+				outfilename = tripleC.decrypt_file(filename, key1, key2, key3)
+				text_box.insert(1.0, outfilename)
 
-		dec = Button(main, text="Decrypt", bd=10, width=10, command=decrypt,
-					 bg='tomato2', fg='white')
+		dec = Button(main, text="Decrypt", bd=10, width=10, command=decrypt,bg='tomato2', fg='white')
 		dec.grid(row=0, column=3, padx=10, pady=10)
 
 	###############################################################################################################################
