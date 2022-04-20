@@ -5,7 +5,7 @@ import webbrowser
 from tkinter import ttk
 from time import strftime
 from PIL import Image, ImageTk
-from ciphers import rsaC, vignereC
+from ciphers import rsaC, vignereC, aesC
 
 
 root = Tk()
@@ -48,11 +48,7 @@ def cipher():
 		for widget in main.winfo_children():
 			widget.destroy()
 
-	def window_show():
-		remove()
-
 	def lab():
-
 		text_label = Label(main, text="Enter text: ", font=('fixedsys', 16, "bold"), fg="black")
 		text_label.grid(row=0, column=0, padx=20, pady=20)
 
@@ -227,34 +223,60 @@ def cipher():
 	def AES_cipher():
 		remove()
 
-		key_text = Entry(main, width=40)
-		key_text.grid(row=3, column=0, padx=10, pady=10)
+		label_key = Label(main, text="Enter 16-character key: ", font=('fixedsys', 14), pady=15, fg="black")
+		label_key.grid(row=2, column=0)
+		entry_key = Entry(main, width=20)
+		entry_key.grid(row=3, column=0, padx=10, pady=10)
 
 		text_box, new_text = lab()
-		sample = " "
+		sample = ""
 		new_text.insert(1.0, sample)
-		label = Label(main, text="AES cipher")
+		label = Label(main, text="AES Encryption" , font=('Times New Roman', 16, "bold"), bg="white")
 		label.grid(row=0, column=1)
+		
+		file_type = ttk.Combobox(main)
+		file_type['values'] = ("text", "image", "file")
+		file_type.current(0)
+		file_type.grid(row=5, column=0)
 
 		def encrypt():
+			cipher_type = file_type.get()
 			new_text.delete('1.0', END)
 			txt = text_box.get("1.0", END)
-			key = key_text.get().lower()
-			enc_text = columnerC.encrypt(txt, key)
-			new_text.insert(1.0, enc_text)
-
+			key = entry_key.get().strip()
+			key = list(bytes(key, encoding='utf-8'))
+			if cipher_type == "text":
+				enc_text = aesC.encrypt_text(txt, key)
+				new_text.insert(1.0, enc_text)
+			# elif cipher_type == "image":
+			# 	txt = txt.strip()
+			# 	rsaC.encryptionImage(txt, key)
+			# 	new_text.insert(1.0, "New Image File in ./encryptedImage.jpg")
+			# else:
+			# 	txt = txt.strip()
+			# 	rsaC.encryptionFile(txt, e, p, q)
+			# 	new_text.insert(1.0, "New File in ./encryptedFile.c")
+			
 		enc = Button(main, text="Encrypt", bd=10, width=10, command=encrypt,bg='#3FBE7F', fg='white')
 		enc.grid(row=0, column=2, padx=20, pady=30)
-
 		def decrypt():
-			new_text.delete('1.0', END)
-			txt = text_box.get("1.0", END)
-			key = key_text.get().lower()
-			dec_text = columnerC.decrypt(txt, key)
-			new_text.insert(1.0, dec_text)
+			cipher_type = file_type.get()
+			text_box.delete('1.0', END)
+			txt = new_text.get("1.0", END)
+			key = entry_key.get().strip()
+			key = list(bytes(key, encoding='utf-8'))
+			if cipher_type == "text":	
+				dec_text = aesC.decrypt_text(txt, key)
+				text_box.insert(1.0, dec_text)
+			# elif cipher_type == "image":
+			# 	txt = txt.strip()
+			# 	new_text.insert(1.0, "New Image File in ./decryptedImage.jpg")
+			# else:
+			# 	txt = txt.strip()
+			# 	rsaC.decryptionFile(e, p, q)
+			# 	new_text.insert(1.0, "New File in ./decryptedFile.c")
 
-		dec = Button(main, text="Decrypt", bd=10, width=10, command=decrypt,
-					 bg='tomato2', fg='white')
+		dec = Button(main, text="Decrypt", bd=10, width=10, command=decrypt,bg='tomato2', fg='white')
 		dec.grid(row=0, column=3, padx=10, pady=10)
 
 	###########################################################################################################################
@@ -303,4 +325,3 @@ chiper_button.pack(pady=30)
 
 
 root.mainloop()
-

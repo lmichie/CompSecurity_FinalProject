@@ -157,7 +157,6 @@ def encrypt(message, key, nrounds=10):
         state = list(message)
         
     exp_key = expand_key(key, nrounds)
-    print(exp_key)
     
     state = add_round_key(state, exp_key[0:16])
     for r in range(1, nrounds):
@@ -192,3 +191,65 @@ def decrypt(cipher, key, nrounds=10):
     state = add_round_key(state, exp_key[0:16])
     
     return list(state)
+
+
+def encrypt_text(text, key, blocksize=16):
+    text = text.strip()
+    text = bytes(text, encoding='utf-8')
+    if blocksize:
+        pad_length = 16 - (len(text) % 16)
+        text += bytes([pad_length]) * pad_length
+    cipher = encrypt(text, key)
+    return bytes(cipher).hex()
+
+def decrypt_text(cipher, key, blocksize=16):
+    cipher = bytes.fromhex(cipher)
+    text = decrypt(cipher, key)
+    if blocksize:
+        text = text[:-text[-1]]
+    text = bytes(text).decode("utf-8") 
+    return text
+
+def encrypt_image(filename, key, blocksize=16):
+    with open(filename, "rb") as img_file:
+        img = bytes(img_file.read())
+    if blocksize:
+        pad_length = 16 - (len(img) % 16)
+        img += bytes([pad_length]) * pad_length
+    cipher = encrypt(img, key)
+    with open('./encryptedImage.jpeg', 'wb') as out:
+        out.write(cipher)
+    return "./encryptedImage.jpeg"
+	
+def decrypt_image(filename, key, blocksize=16):
+    with open(filename, "rb") as cipher_file:
+        cipher = bytes(cipher_file.read())
+    img = decrypt(cipher, key)
+    if blocksize:
+        img = img[:-img[-1]]
+    with open('./decryptedImage.jpeg', 'wb') as out:
+        out.write(img)
+    return './decryptedImage.jpeg'
+
+def encrypt_file(filename, key, blocksize=16):
+    with open(filename, "r") as text_file:
+        text = bytes(text_file.read(), encoding='utf8')
+    if blocksize:
+        pad_length = 16 - (len(text) % 16)
+        text += bytes([pad_length]) * pad_length
+    cipher = encrypt(text, key)
+    cipher = ''.join(chr(p) for p in cipher)
+    with open('./encryptedFile.c', 'w') as out:
+        out.write(cipher)
+    return "./encryptedFile.c"
+
+def decrypt_file(filename, key, blocksize=16):
+    with open(filename, "r") as cipher_file:
+        cipher = bytes(cipher_file.read(), encoding='utf8')
+    text = decrypt(cipher, key)
+    if blocksize:
+        text = text[:-text[-1]]
+    text = text.decode("utf-8") 
+    with open('./decryptedFile.c', 'w') as out:
+        out.write(text)
+    return "./decryptedFile.c"
