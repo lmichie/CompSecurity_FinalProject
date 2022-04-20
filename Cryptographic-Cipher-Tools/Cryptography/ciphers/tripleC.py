@@ -248,7 +248,18 @@ def DES_encryption(plainText, key):
 
     cyphertext_binary = DES(blocks, keys)
 
-    print(cyphertext_binary)
+    return cyphertext_binary
+
+
+def DES_encryption_binary(plainText, key):
+
+    keys = generate_keys(key)
+
+    blocks = generate_binary_blocks(plainText)
+
+    cyphertext_binary = DES(blocks, keys)
+
+    return cyphertext_binary
 
 
 def DES_decryption(cyphertext, key):
@@ -261,6 +272,31 @@ def DES_decryption(cyphertext, key):
 
     plain_binary = DES(blocks, keys)
 
-    plain_text = binascii.unhexlify('%x' % int(plain_binary, 2)).decode()
+    return plain_binary
 
-    print(plain_text)
+
+def triple_DES_encryption(plainText, key_1, key_2, key_3):
+
+    cyphertext_binary = DES_encryption(plainText, key_1)
+
+    plain_binary = DES_decryption(cyphertext_binary, key_2)
+
+    return DES_encryption_binary(plain_binary, key_3)
+
+
+def triple_DES_decryption(cypherText, key_1, key_2, key_3):
+
+    plain_binary = DES_decryption(cypherText, key_3)
+
+    cyphertext_binary = DES_encryption_binary(plain_binary, key_2)
+
+    plain_binary = DES_decryption(cyphertext_binary, key_1)
+
+    return plain_binary
+
+
+def binary_to_plaintext(binary):
+    try:
+        return binascii.unhexlify('%x' % int(binary, 2)).decode()
+    except:
+        return "Error: could not translate to ascii"
