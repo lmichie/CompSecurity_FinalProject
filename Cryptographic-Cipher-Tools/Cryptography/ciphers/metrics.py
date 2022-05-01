@@ -2,7 +2,7 @@ from collections import defaultdict
 from time import time
 import matplotlib.pyplot as plt
 import numpy as np
-import rsaC, vignereC, aesC, tripleC
+import rsaC, vigenereC, aesC, tripleC
 
 lengths = [10, 100, 1000, 10000]
 duration = defaultdict(list)
@@ -15,7 +15,7 @@ for length in lengths:
     key = 'ndsecure'
     for _i in range(n):
         start = time()
-        assert text == vignereC.decrypt(vignereC.encrypt(text, key), key)
+        assert text == vigenereC.decrypt(vigenereC.encrypt(text, key), key)
         total += time() - start
     duration['vigenere'].append(total/n)
     
@@ -33,10 +33,8 @@ for length in lengths:
     key2 = "1111111111111111111111111111111111111111111111111111111111111111"
     for _i in range(n):
         start = time()
-        r = tripleC.triple_DES_encryption(text, key0, key1, key2)
-        r = tripleC.triple_DES_decryption(r, key0, key1, key2)
-        r = tripleC.binary_to_plaintext(r)
-        r = r.rstrip('\0')
+        r = tripleC.encrypt_text(text, key0, key1, key2)
+        r = tripleC.decrypt_text(r, key0, key1, key2)
         assert text == r
         total += time() - start
     duration['3des'].append(total/n)
@@ -65,10 +63,11 @@ br3 = [bar_width + x + 0.5 * bar_width for x in np.arange(len(lengths))]
 br4 = [bar_width + x + 1.5 * bar_width for x in np.arange(len(lengths))]
  
 # Make the plot
-plt.bar(br1, duration['vigenere'], width = bar_width, edgecolor ='grey', label ='Vigénère', log=True)
-plt.bar(br2, duration['rsa'], width = bar_width, edgecolor ='grey', label ='RSA', log=True)
-plt.bar(br3, duration['3des'], width = bar_width, edgecolor ='grey', label ='3DES', log=True)
-plt.bar(br4, duration['aes'], width = bar_width, edgecolor ='grey', label ='AES', log=True)
+logarithmic_scale = False
+plt.bar(br1, duration['vigenere'], width = bar_width, edgecolor ='grey', label ='Vigénère', log=logarithmic_scale)
+plt.bar(br2, duration['rsa'], width = bar_width, edgecolor ='grey', label ='RSA', log=logarithmic_scale)
+plt.bar(br3, duration['3des'], width = bar_width, edgecolor ='grey', label ='3DES', log=logarithmic_scale)
+plt.bar(br4, duration['aes'], width = bar_width, edgecolor ='grey', label ='AES', log=logarithmic_scale)
  
 # Adding Xticks
 plt.xlabel('Message Length', fontweight ='bold', fontsize = 15)

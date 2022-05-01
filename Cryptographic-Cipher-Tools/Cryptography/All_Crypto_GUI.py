@@ -5,7 +5,7 @@ import webbrowser
 from tkinter import ttk
 from time import strftime
 from PIL import Image, ImageTk
-from ciphers import rsaC, vignereC, aesC, tripleC
+from ciphers import rsaC, vigenereC, aesC, tripleC
 
 
 root = Tk()
@@ -142,7 +142,7 @@ def cipher():
 
 
 	##############################################################################################################################
-	def vignere_cipher():
+	def vigenere_cipher():
 		remove()
 
 		key_label = Label(main, text="Enter key: ", font=('Kokila', 14), pady=15,
@@ -152,15 +152,15 @@ def cipher():
 		key_text.grid(row=3, column=0, padx=10, pady=10)
 
 		text_box, new_text = lab()
-		label = Label(main, text="vignere_cipher")
+		label = Label(main, text="vigenere_cipher")
 		label.grid(row=0, column=1)
 
 		def encrypt():
 			txt = text_box.get("1.0", END)
 			key = key_text.get()
-			enc_text = vignereC.encrypt(txt, key)
-			text_box.delete('1.0', END)
-			text_box.insert(1.0, enc_text)
+			new_text.delete('1.0', END)
+			enc_text = vigenereC.encrypt(txt, key)
+			new_text.insert(1.0, enc_text)
 
 		enc = Button(main, text="Encrypt", bd=10, width=10, command=encrypt,
 					 bg='#3FBE7F', fg='white')
@@ -169,9 +169,9 @@ def cipher():
 		def decrypt():
 			txt = text_box.get("1.0", END)
 			key = key_text.get()
-			dec_text = vignereC.decrypt(txt, key)
-			text_box.delete('1.0', END)
-			text_box.insert(1.0, dec_text)
+			new_text.delete('1.0', END)
+			dec_text = vigenereC.decrypt(txt, key)
+			new_text.insert(1.0, dec_text)
 
 		dec = Button(main, text="Decrypt", bd=10, width=10, command=decrypt,
 					 bg='tomato2', fg='white')
@@ -194,8 +194,6 @@ def cipher():
 		entry_key_3.grid(row=5, column=0, padx=10, pady=10)
 
 		text_box, new_text = lab()
-		sample = ""
-		new_text.insert(1.0, sample)
 		label = Label(main, text="3DES Encryption" , font=('Times New Roman', 16, "bold"), bg="white")
 		label.grid(row=0, column=1)
 		
@@ -227,22 +225,22 @@ def cipher():
 		enc.grid(row=0, column=2, padx=20, pady=30)
 		def decrypt():
 			cipher_type = file_type.get()
-			text_box.delete('1.0', END)
-			txt = new_text.get("1.0", END).strip()
+			new_text.delete('1.0', END)
+			txt = text_box.get("1.0", END).strip()
 			key1 = entry_key_1.get().strip()
 			key2 = entry_key_2.get().strip()
 			key3 = entry_key_3.get().strip()
 			if cipher_type == "text":	
 				dec_text = tripleC.decrypt_text(txt, key1, key2, key3)
-				text_box.insert(1.0, dec_text)
+				new_text.insert(1.0, dec_text)
 			elif cipher_type == "image":
 				filename = txt
 				outfilename = tripleC.decrypt_image(filename, key1, key2, key3)
-				text_box.insert(1.0, outfilename)
+				new_text.insert(1.0, outfilename)
 			else:
 				filename = txt
 				outfilename = tripleC.decrypt_file(filename, key1, key2, key3)
-				text_box.insert(1.0, outfilename)
+				new_text.insert(1.0, outfilename)
 
 		dec = Button(main, text="Decrypt", bd=10, width=10, command=decrypt,bg='tomato2', fg='white')
 		dec.grid(row=0, column=3, padx=10, pady=10)
@@ -316,7 +314,7 @@ def cipher():
 					 activeforeground='#3FBE4F')
 	btn_rsa.grid(row=1, column=0)
 
-	btn_vig = Button(left_frame, padx=20, bd=10, text='Vignere Cipher', width=20, height=3, command=vignere_cipher,
+	btn_vig = Button(left_frame, padx=20, bd=10, text='Vignere Cipher', width=20, height=3, command=vigenere_cipher,
 					 bg='white', fg='red', activebackground='black', font=('arial', 16, 'bold'),
 					 activeforeground='#3FBE4F')
 	btn_vig.grid(row=2, column=0)

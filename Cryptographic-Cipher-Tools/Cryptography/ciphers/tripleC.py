@@ -346,9 +346,9 @@ def decrypt_file(filename, key1, key2, key3):
     return "./decryptedFile.c"
 
 def bits_to_bytes(bits):
-    iter = 8
-    bytes = []
-    while iter <= len(bits):
-        bytes.append(int(bits[iter-8:iter],2))
-        iter += 8
-    return bytes
+    it = 8
+    result = []
+    while it <= len(bits):
+        result.append(int(bits[it-8:it],2))
+        it += 8
+    return result
