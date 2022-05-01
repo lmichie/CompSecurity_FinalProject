@@ -74,7 +74,7 @@ def decrypt_image(filename, key, blocksize=16):
         out.write(bytes(img))
     return './decryptedImage.jpeg'
 
-def encrypt_file(filename, key, blocksize=16 - PADDING_CORRECTION):
+def encrypt_file(filename, key, blocksize=16):
     with open(filename, "r", newline="\n") as text_file:
         text = bytes(text_file.read(), encoding='utf8')
     if blocksize:

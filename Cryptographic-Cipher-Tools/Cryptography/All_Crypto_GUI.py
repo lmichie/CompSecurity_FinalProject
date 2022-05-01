@@ -1,9 +1,5 @@
 from tkinter import *
-import random
-from tkinter.font import BOLD
-import webbrowser
 from tkinter import ttk
-from time import strftime
 from PIL import Image, ImageTk
 from ciphers import rsaC, vigenereC, aesC, tripleC
 
