@@ -212,7 +212,7 @@ def cipher():
 			key2 = entry_key_2.get().strip()
 			key3 = entry_key_3.get().strip()
 			if cipher_type == "text":
-				enc_text = tripleC.triple_DES_encryption(txt, key1, key2, key3)
+				enc_text = tripleC.encrypt_text(txt, key1, key2, key3)
 				new_text.insert(1.0, enc_text)
 			elif cipher_type == "image":
 				filename = txt
@@ -233,8 +233,7 @@ def cipher():
 			key2 = entry_key_2.get().strip()
 			key3 = entry_key_3.get().strip()
 			if cipher_type == "text":	
-				dec_text = tripleC.triple_DES_decryption(txt, key1, key2, key3)
-				dec_text = tripleC.binary_to_plaintext(dec_text)
+				dec_text = tripleC.decrypt_text(txt, key1, key2, key3)
 				text_box.insert(1.0, dec_text)
 			elif cipher_type == "image":
 				filename = txt
