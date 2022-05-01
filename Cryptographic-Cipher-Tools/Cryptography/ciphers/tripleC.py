@@ -295,14 +295,6 @@ def triple_DES_decryption(cypherText, key_1, key_2, key_3):
 
     return plain_binary
 
-def bitstring_to_bit_arrray(binary):
-    result = []
-    for bit in binary:
-        if bit == '1':
-            result.append(1)
-        else:
-            result.append(0)
-    return result
 
 def binary_to_plaintext(binary):
     try:
@@ -322,7 +314,7 @@ def encrypt_image(filename, key1, key2, key3):
     plain_binary = BitArray(img)
     cipher = triple_DES_encryption(plain_binary.bin + '1111', key1, key2, key3)
     with open('./encryptedImage.jpeg', 'wb') as out:
-        out.write(bytes(bitstring_to_bit_arrray(cipher)))
+        out.write(bytes(bits_to_bytes(cipher)))
     return "./encryptedImage.jpeg"
 
 def decrypt_image(filename, key1, key2, key3):
@@ -331,7 +323,7 @@ def decrypt_image(filename, key1, key2, key3):
     plain_binary = BitArray(cipher)
     img = remove_padding(triple_DES_decryption(plain_binary.bin, key1, key2, key3))
     with open('./decryptedImage.jpeg', 'wb') as out:
-        out.write(bytes(bitstring_to_bit_arrray(img)))
+        out.write(bytes(bits_to_bytes(img)))
     return './decryptedImage.jpeg'
 
 def encrypt_file(filename,  key1, key2, key3):
@@ -340,7 +332,7 @@ def encrypt_file(filename,  key1, key2, key3):
     plain_binary = BitArray(text)
     cipher = triple_DES_encryption(plain_binary.bin + '1111', key1, key2, key3)
     with open('./encryptedFile.c', 'wb') as out:
-        out.write(bytes(bitstring_to_bit_arrray(cipher)))
+        out.write(bytes(bits_to_bytes(cipher)))
     return "./encryptedFile.c"
 
 def decrypt_file(filename, key1, key2, key3):
@@ -348,7 +340,15 @@ def decrypt_file(filename, key1, key2, key3):
         cipher = bytes(cipher_file.read())
     cypher_binary = BitArray(cipher)
     text = remove_padding(triple_DES_decryption(cypher_binary.bin, key1, key2, key3))
-    text = bytes(bitstring_to_bit_arrray(text)).decode("utf-8") 
-    with open('./decryptedFile.c', 'w', newline="\sn") as out:
+    text = bytes(bits_to_bytes(text)).decode("utf-8") 
+    with open('./decryptedFile.c', 'w', newline="\n") as out:
         out.write(text)
     return "./decryptedFile.c"
+
+def bits_to_bytes(bits):
+    iter = 8
+    bytes = []
+    while iter <= len(bits):
+        bytes.append(int(bits[iter-8:iter],2))
+        iter += 8
+    return bytes
