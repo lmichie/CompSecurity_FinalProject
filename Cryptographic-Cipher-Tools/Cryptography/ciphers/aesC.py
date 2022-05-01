@@ -203,7 +203,7 @@ def encrypt_text(text, key, blocksize=16):
     text = text.strip()
     text = bytes(text, encoding='utf-8')
     if blocksize:
-        pad_length = 16 - (len(text) % 16)
+        pad_length = blocksize - (len(text) % blocksize)
         text += bytes([pad_length]) * pad_length
     cipher = encrypt(text, key)
     return bytes(cipher).hex()
@@ -220,7 +220,7 @@ def encrypt_image(filename, key, blocksize=16):
     with open(filename, "rb") as img_file:
         img = bytes(img_file.read())
     if blocksize:
-        pad_length = 16 - (len(img) % 16)
+        pad_length = blocksize - (len(text) % blocksize)
         img += bytes([pad_length]) * pad_length
     cipher = encrypt(img, key)
     with open('./encryptedImage.jpeg', 'wb') as out:
@@ -241,7 +241,7 @@ def encrypt_file(filename, key, blocksize=16):
     with open(filename, "r", newline="\n") as text_file:
         text = bytes(text_file.read(), encoding='utf8')
     if blocksize:
-        pad_length = 16 - (len(text) % 16)
+        pad_length = blocksize - (len(text) % blocksize)
         text += bytes([pad_length]) * pad_length
     cipher = encrypt(text, key)
     cipher = bytes(cipher)

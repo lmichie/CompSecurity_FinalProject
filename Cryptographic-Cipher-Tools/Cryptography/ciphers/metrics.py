@@ -8,44 +8,49 @@ lengths = [10, 100, 1000, 10000]
 duration = defaultdict(list)
 
 for length in lengths:
-    n = 10
+    runs = 10
     text = 'a' * length
+    
+    print('length:', length)
     
     total = 0
     key = 'ndsecure'
-    for _i in range(n):
+    for _i in range(runs):
         start = time()
         assert text == vigenereC.decrypt(vigenereC.encrypt(text, key), key)
         total += time() - start
-    duration['vigenere'].append(total/n)
+    duration['vigenere'].append(total/runs)
     
     total = 0
-    e, p, q = 11, 113, 151
-    for _i in range(n):
+    e = 65537
+    d = 52203292265329821477201215331647767385
+    n = 109658872566201497189314566136483333067
+    key = (e, d, n)
+    for _i in range(runs):
         start = time()
-        assert text == rsaC.decryption(rsaC.encryption(text, e, p, q)[1], e, p, q)
+        assert text == rsaC.decrypt_text(rsaC.encrypt_text(text, key), key)
         total += time() - start
-    duration['rsa'].append(total/n)
+    duration['rsa'].append(total/runs)
     
     total = 0
     key0 = "0000000011111111000000001111111100000000111111110000000011111111"
     key1 = "0000000000000000000000000000000000000000000000000000000000000000"
     key2 = "1111111111111111111111111111111111111111111111111111111111111111"
-    for _i in range(n):
+    for _i in range(runs):
         start = time()
         r = tripleC.encrypt_text(text, key0, key1, key2)
         r = tripleC.decrypt_text(r, key0, key1, key2)
         assert text == r
         total += time() - start
-    duration['3des'].append(total/n)
+    duration['3des'].append(total/runs)
     
     total = 0
     key = list(bytes('ndsecurendsecure', encoding='utf-8'))
-    for _i in range(n):
+    for _i in range(runs):
         start = time()
         assert text == aesC.decrypt_text(aesC.encrypt_text(text, key), key)
         total += time() - start
-    duration['aes'].append(total/n)
+    duration['aes'].append(total/runs)
     
 # set width of bar
 bar_width = 0.1
